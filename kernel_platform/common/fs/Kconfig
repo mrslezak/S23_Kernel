@@ -387,4 +387,10 @@ source "fs/unicode/Kconfig"
 config IO_WQ
 	bool
 
+config DYNAMIC_FSYNC
+	bool "dynamic file sync control"
+	default n
+	help
+	  An experimental file sync control using new power_suspend driver 
+
 endmenu

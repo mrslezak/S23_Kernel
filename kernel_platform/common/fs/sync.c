@@ -20,6 +20,10 @@
 #include <linux/backing-dev.h>
 #include "internal.h"
 
+#ifdef CONFIG_DYNAMIC_FSYNC
+#include <linux/dyn_sync_cntrl.h>
+#endif
+
 bool fsync_enabled = true;
 module_param(fsync_enabled, bool, 0644);
 
@@ -87,6 +91,21 @@ static void sync_fs_one_sb(struct super_block *sb, void *arg)
 	    sb->s_op->sync_fs)
 		sb->s_op->sync_fs(sb, *(int *)arg);
 }
+
+#ifdef CONFIG_DYNAMIC_FSYNC
+/*
+ * Sync all the data for all the filesystems (called by sys_sync() and
+ * emergency sync)
+ */
+void sync_filesystems(int wait)
+{
+	iterate_supers(sync_inodes_one_sb, NULL);
+	iterate_supers(sync_fs_one_sb, &wait);
+	iterate_supers(sync_fs_one_sb, &wait);
+	sync_bdevs(false);
+	sync_bdevs(true);
+}
+#endif
 
 /*
  * Sync everything. We start by waking flusher threads so that most of
@@ -158,6 +177,11 @@ SYSCALL_DEFINE1(syncfs, int, fd)
 
 	if (!fsync_enabled)
 		return 0;
+	
+	#ifdef CONFIG_DYNAMIC_FSYNC
+	if (likely(dyn_fsync_active && suspend_active))
+		return 0;
+	#endif	
 
 	f = fdget(fd);
 
@@ -192,6 +216,11 @@ int vfs_fsync_range(struct file *file, loff_t start, loff_t end, int datasync)
 
 	if (!fsync_enabled)
 		return 0;
+	
+	#ifdef CONFIG_DYNAMIC_FSYNC
+	if (likely(dyn_fsync_active && suspend_active))
+		return 0;
+	#endif
 
 	if (!file->f_op->fsync)
 		return -EINVAL;
@@ -225,6 +254,11 @@ static int do_fsync(unsigned int fd, int datasync)
 
 	if (!fsync_enabled)
 		return 0;
+	
+	#ifdef CONFIG_DYNAMIC_FSYNC
+	if (likely(dyn_fsync_active && suspend_active))
+		return 0;
+	#endif
 
 	f = fdget(fd);
 
@@ -262,6 +296,11 @@ int sync_file_range(struct file *file, loff_t offset, loff_t nbytes,
 
 	if (!fsync_enabled)
 		return 0;
+	
+	#ifdef CONFIG_DYNAMIC_FSYNC
+	if (likely(dyn_fsync_active && suspend_active))
+		return 0;
+	#endif
 
 	ret = -EINVAL;
 	if (flags & ~VALID_FLAGS)
