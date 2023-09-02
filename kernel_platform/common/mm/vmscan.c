@@ -7103,13 +7103,14 @@ static int balance_pgdat(pg_data_t *pgdat, int order, int highest_zoneidx)
 
 restart:
 	set_reclaim_active(pgdat, highest_zoneidx);
-	sc.priority = DEF_PRIORITY;
+	sc.priority =	 DEF_PRIORITY;
 	do {
 		unsigned long nr_reclaimed = sc.nr_reclaimed;
 		bool raise_priority = true;
 		bool balanced;
 		bool ret;
-
+		
+		simple_lmk_decide_reclaim(sc.priority);
 		sc.reclaim_idx = highest_zoneidx;
 
 		/*
@@ -7309,6 +7310,7 @@ static void kswapd_try_to_sleep(pg_data_t *pgdat, int alloc_order, int reclaim_o
 	 * succeed.
 	 */
 	if (prepare_kswapd_sleep(pgdat, reclaim_order, highest_zoneidx)) {
+		simple_lmk_stop_reclaim();
 		/*
 		 * Compaction records what page blocks it recently failed to
 		 * isolate pages from and skips them in the future scanning.
@@ -7349,6 +7351,7 @@ static void kswapd_try_to_sleep(pg_data_t *pgdat, int alloc_order, int reclaim_o
 	 */
 	if (!remaining &&
 	    prepare_kswapd_sleep(pgdat, reclaim_order, highest_zoneidx)) {
+		simple_lmk_stop_reclaim();
 		trace_mm_vmscan_kswapd_sleep(pgdat->node_id);
 
 		/*
