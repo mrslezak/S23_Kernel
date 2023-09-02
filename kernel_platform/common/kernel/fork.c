@@ -100,7 +100,7 @@
 #include <linux/bpf.h>
 #include <linux/cpufreq_times.h>
 #include <linux/task_integrity.h>
-
+#include <linux/simple_lmk.h>
 #include <asm/pgalloc.h>
 #include <linux/uaccess.h>
 #include <asm/mmu_context.h>
