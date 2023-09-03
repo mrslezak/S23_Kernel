@@ -100,7 +100,7 @@ static unsigned long find_victims(struct victim_info *varr, int *vindex,
 
 	for_each_process(tsk) {
 		struct task_struct *vtsk;
-		unsigned long tasksize;
+		unsigned long tasksize = 0;
 
 		/*
 		 * Search for tasks with the targeted importance (adj). Since

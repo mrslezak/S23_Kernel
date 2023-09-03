@@ -59,7 +59,6 @@ static int zram_major;
 static const char *default_compressor = "lzo-rle";
 
 static bool is_lzorle;
-static unsigned char lzo_marker[4] = {0x11, 0x00, 0x00};
 
 /* Module params (documentation at end) */
 static unsigned int num_devices = 1;
@@ -2952,11 +2951,6 @@ static int __zram_bvec_read(struct zram *zram, struct page *page, u32 index,
 		kunmap_atomic(dst);
 		zcomp_stream_put(zram->comp);
 	}
-
-	/* Should NEVER happen. BUG() if it does. */
-	if (unlikely(ret))
-		handle_decomp_fail(zram->compressor, ret, index, src, size,
-				   NULL);
 
 	zs_unmap_object(zram->mem_pool, handle);
 #ifdef CONFIG_ZRAM_LRU_WRITEBACK
