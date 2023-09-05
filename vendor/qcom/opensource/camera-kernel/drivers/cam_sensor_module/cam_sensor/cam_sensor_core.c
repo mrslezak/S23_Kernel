@@ -1098,8 +1098,10 @@ int cam_sensor_post_apply_settings(
 	enum cam_sensor_packet_opcodes opcode)
 {
 	int rc = 0;
+
 #if defined(CONFIG_SENSOR_RETENTION) && defined(CONFIG_SEC_DM3Q_PROJECT)
-	uint32_t sensor_id = s_ctrl->sensordata->slave_info.sensor_id;
+	uint32_t sensor_id = 0;
+	sensor_id = s_ctrl->sensordata->slave_info.sensor_id;
 #endif
 
 	switch (opcode) {
