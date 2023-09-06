@@ -39,6 +39,7 @@ set_perm_recursive 0 0 750 750 $ramdisk/*;
 ## AnyKernel boot install
 flash_generic boot;
 flash_generic vendor_boot;
-flash_generic vendor_dlkm;
-flash_generic dtbo;
+flash_generic init_boot;
+#flash_generic vendor_dlkm;
+#flash_generic dtbo;
 ## end boot install
