@@ -5,18 +5,18 @@
 # begin properties
 properties() { '
 kernel.string=Custom Kernel for S23 series by MattoftheDead
-do.devicecheck=0
+do.devicecheck=1
 do.modules=0
 do.systemless=1
 do.cleanup=1
 do.cleanuponabort=0
-device.name1=
-device.name2=
-device.name3=
+device.name1=dm1q
+device.name2=dm2q
+device.name3=dm3q
 device.name4=
 device.name5=
 supported.versions=13
-supported.patchlevels=2023-07 -
+supported.patchlevels=2023-08 -
 '; } # end properties
 
 # shell variables
