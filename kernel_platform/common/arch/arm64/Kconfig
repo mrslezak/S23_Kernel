@@ -2096,7 +2096,7 @@ menu "Hypervisor"
 config UH
 	bool "Enable micro hypervisor feature"
 	depends on !SEC_FACTORY
-	default y
+	default n
 	help
 	  It enables a micro hypervisor.
 	  It's samsung's hypervisor.
@@ -2106,7 +2106,7 @@ config UH
 config RKP
 	bool "Enable RKP(Realtime Kernel Protection) feature"
 	depends on UH
-	default y
+	default n
 	help
 	  This solution provides the kernel protection
 	  using a security monitor located within an isolated execution environment.
@@ -2124,7 +2124,7 @@ config KDP
 	bool "Enable KDP(Kernel Data Protection) feature"
 	depends on !SEC_VTS_TEST
 	depends on UH
-	default y
+	default n
 	help
 	  Prevents unauthorized cred modification,
 	  namespace modification, mapping for page table.
@@ -2134,7 +2134,7 @@ config KDP_CRED
 	depends on !SEC_VTS_TEST
 	depends on UH
 	depends on KDP
-	default y
+	default n
 	help
 	  Prevents unauthorized cred modification,
 	  namespace modification, mapping for page table.
@@ -2144,7 +2144,7 @@ config KDP_NS
 	depends on !SEC_VTS_TEST
 	depends on UH
 	depends on KDP
-	default y
+	default n
 	help
 	  Prevents unauthorized cred modification,
 	  namespace modification, mapping for page table.
@@ -2152,7 +2152,7 @@ config KDP_NS
 config RKP_TEST
 	bool "Enable RKP test"
 	depends on !SAMSUNG_PRODUCT_SHIP && RKP
-	default y
+	default n
 	help
 	  It is a test feature for RKP debugging.
 	  This configuration checks following lists.
@@ -2165,7 +2165,7 @@ config RKP_TEST
 config KDP_TEST
 	bool "Enable KDP test"
 	depends on !SAMSUNG_PRODUCT_SHIP && KDP_CRED && KDP_NS
-	default y
+	default n
 	help
 	  It is a test configuration for KDP debugging.
 	  This configuration checks following lists.
